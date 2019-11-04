@@ -1,21 +1,33 @@
 var Express = require('express');
 var bodyParser = require('body-parser');
-const { ObjectID } = require('mongodb');
+
+const morgan = require('morgan');
+const cors = require('cors');
+
+const router = require('./router');
+
+
 
 var fs = require('fs');
 var port = process.env.PORT || 3000;
 
-
-var {mongoose} = require('./Database/mongoose');
-var {User} = require('./Models/User');
-var {Project} = require('./Models/Project');
-var {Tool} = require('./Models/Tool');
-
 var app = Express();
 
-//============ MiddleWear =========================
-// Extract body portion of incoming request stream and exposes it on req.body
+// App SetUp Middleware:
+app.use(morgan('combined'));
+
+// Set the JWT to x-auth with this the front end can access the token in the request.
+const corsOptions = {
+  exposedHeaders: ['x-auth'],
+};
+app.use(cors(corsOptions));
+
 app.use(bodyParser.json());
+
+// ROUTER: Routes of actions:
+router(app);
+
+//============ MiddleWear =========================
 // Log for request made to the server:
 // app.use((req, res, next)=>{
 //   var now = new Date().toString();
@@ -29,44 +41,7 @@ app.use(bodyParser.json());
 //   next();
 // });
 
-app.get('/project',  (req, res)=>{
-  Project.find().then((project)=>{
-    res.send({
-      projects:project
-    })
-  },(e)=>{
-    res.status(400).send(e)
-  })
-})
-
-app.post('/project', (req,res)=>{
-  var project = new Project({
-    name: req.body.name
-  });
-  project.save().then((doc)=>{
-    res.send(doc);
-  }, (e)=>{
-    res.status(400).send(e);
-  });
-});
-
-app.get('/project/:id', (req,res)=>{
-  var id = req.params.id;
-  if(!ObjectID.isValid(id)) {
-    return res.status(404).send();
-  }
-
-  Project.findById(id).then((doc)=>{
-    if(!doc){
-      return res.status(404).send();
-    }
-    res.send({project: doc});
-  }).catch((e)=>{
-    res.status(400).send()
-  })
-});
-
-
+// PORT for APP:
 app.listen(port, () => {
-  console.log(`Server is up on port ${port}`)
+  console.log(`Server is up on port ${port}`);
 });
