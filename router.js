@@ -2,7 +2,7 @@ const ProjectController = require("./Controllers/project_controller");
 const ToolController = require("./Controllers/tool_contorller");
 
 const UserController = require("./Controllers/user_controller");
-const { authenticate } = require('./middlewear/authenticate');
+const { authenticate } = require('./Middlewear/authenticate');
 
 
 module.exports = function (app) {

@@ -6,8 +6,6 @@ const cors = require('cors');
 
 const router = require('./router');
 
-
-
 var fs = require('fs');
 var port = process.env.PORT || 3000;
 
