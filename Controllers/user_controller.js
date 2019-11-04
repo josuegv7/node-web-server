@@ -6,6 +6,7 @@ module.exports = {
     },
     addUser(req, res) {
         var body = _.pick(req.body, ['name', 'email', 'password']);
+        console.log("Add User");
         var user = new User(body);
         user.save().then(() => {
             return user.generateAuthToken();
