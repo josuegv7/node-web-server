@@ -17,9 +17,9 @@ var app = Express();
 // App SetUp Middleware:
 app.use(morgan('combined'));
 
-// Set the JWT to x-auth with this the front end can access the token in the request.
+// Set the JWT to authToken with this the front end can access the token in the request.
 const corsOptions = {
-  exposedHeaders: ['x-auth'],
+  exposedHeaders: ['authToken'],
 };
 app.use(cors(corsOptions));
 
