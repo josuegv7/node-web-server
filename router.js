@@ -21,6 +21,6 @@ module.exports = function (app) {
   // User Routes:
   app.post('/user/create', UserController.addUser);
   app.get('/user/get', authenticate, UserController.getUser);
-  app.post('/user/login', authenticate, UserController.loginUser);
+  app.post('/user/login', UserController.loginUser);
   app.delete('/user/logout', authenticate, UserController.logoutUser);
 };

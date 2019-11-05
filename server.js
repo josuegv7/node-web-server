@@ -4,6 +4,9 @@ var bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 
+const { mongoose } = require('./Database/mongoose');
+
+
 const router = require('./router');
 
 var fs = require('fs');
@@ -20,7 +23,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ type: '*/*' }));
 
 // ROUTER: Routes of actions:
 router(app);

@@ -1,4 +1,4 @@
-const Project = require("../Models/Project");
+const {Project} = require("../Models/Project");
 
 module.exports = {
   // Get list of projets per user ID

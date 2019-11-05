@@ -1,4 +1,4 @@
-const Tool = require("../Models/Tool");
+const {Tool} = require("../Models/Tool");
 
 module.exports = {
     // Get list of projets per user ID
