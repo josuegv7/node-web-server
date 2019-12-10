@@ -32,7 +32,8 @@ module.exports = {
             });
     },
     logoutUser(req, res) {
-        req.user.removerToken(req.token).then(() => {
+        console.log("Controller TOKEN: ", req.token);
+        req.user.removeToken(req.token).then(() => {
             res.status(200).send();
         }, () => {
             res.status(400).send();

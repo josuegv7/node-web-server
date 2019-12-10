@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-
 var toolSchema = new Schema(
   {
     name: {
@@ -11,6 +10,11 @@ var toolSchema = new Schema(
       trim: true
     },
     price: {
+      type: String,
+      minlength: 1,
+      trim: true
+    },
+    store: {
       type: String,
       minlength: 1,
       trim: true

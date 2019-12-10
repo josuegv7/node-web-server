@@ -1,4 +1,6 @@
 const {Project} = require("../Models/Project");
+const { ObjectId } = require("mongodb");
+
 
 module.exports = {
   // Get list of projets per user ID
@@ -11,16 +13,41 @@ module.exports = {
       res.status(400).send(e)
     }
   },
+  // Find Project
+  find(req, res) {
+    let id = req.params.id;
+    if (!ObjectId.isValid(id)) {
+      return res.status(404).send();
+    }
+    Project.findOne({
+      _id: id,
+      _creator: req.user._id
+    })
+      .then(Project => {
+        if (Project) {
+          console.log(`Found Food with ID: ${Project}`);
+          res.send({ Project });
+        } else {
+          res.status(404).send();
+          console.log("404: no Food Found");
+        }
+      })
+      .catch(e => res.status(400).send());
+  },
   // Add Project:
   add(req, res){
+    console.log("Add Items: ", req.body.items);
     var project = new Project({
       name: req.body.name,
-      tools: req.body.tools,
+      items: req.body.items,
       materials: req.body.materials,
-      status: req.body.status,
-      completed: req.body.completed,
-      completedOn: req.body.completedOn
+      status: req.body.project_status,
+      project_startDate: req.body.project_startDate,
+      project_completed: req.body.completed,
+      project_completedDate: req.body.completedOn,
+      _creator: req.user._id
     });
+    console.log("New Project: ", project);
     project.save().then(
       (doc)=>{
         res.send(doc);
@@ -61,27 +88,6 @@ module.exports = {
     });
 
 
-  },
-  // Find Project
-  find(req, res){
-    let id = req.params.id;
-    if (!ObjectId.isValid(id)) {
-      return res.status(404).send();
-    }
-    Project.findOne({
-      _id: id,
-      _creator: req.user._id
-    })
-    .then(Project => {
-      if (Project) {
-        console.log(`Found Food with ID: ${Project}`);
-        res.send({ Project });
-      } else {
-        res.status(404).send();
-        console.log("404: no Food Found");
-      }
-    })
-    .catch(e => res.status(400).send());
   },
   delete(req, res){
     var id = req.params.id;
