@@ -15,20 +15,16 @@ var projectSchema = new Schema(
       minlength: 1,
       trim: true
     }],
-    materials: [{
-      type: String,
-      minlength: 1,
-      trim: true
-    }],
+    // materials: [{
+    //   type: String,
+    //   minlength: 1,
+    //   trim: true
+    // }],
     status: {
       type: String,
       minlength: 1,
       trim: true,
       default: null
-    },
-    project_completed: {
-      type: Boolean,
-      default: false
     },
     project_startDate:{
       type: Date,

@@ -1,8 +1,9 @@
+const FileController = require("./Controllers/file_controller");
 const ProjectController = require("./Controllers/project_controller");
 const ToolController = require("./Controllers/tool_contorller");
-
 const UserController = require("./Controllers/user_controller");
 const { authenticate } = require('./Middlewear/authenticate');
+const { singleUpload } = require('./Middlewear/multer');
 
 
 module.exports = function (app) {
@@ -23,4 +24,10 @@ module.exports = function (app) {
   app.get('/user/get', authenticate, UserController.getUser);
   app.post('/user/login', UserController.loginUser);
   app.delete('/user/logout', authenticate, UserController.logoutUser);
+
+
+  // Upload Files:
+  app.post('/files/upload', singleUpload, FileController.uploadFile);
+  app.get('/files/getfile', FileController.getFiles);
+  app.get('/files/open/:filename', FileController.getSingleFile);
 };

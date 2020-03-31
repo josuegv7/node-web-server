@@ -1,4 +1,4 @@
-const {Project} = require("../Models/Project");
+const { Project } = require("../Models/Project");
 const { ObjectId } = require("mongodb");
 
 
@@ -29,21 +29,18 @@ module.exports = {
           res.send({ Project });
         } else {
           res.status(404).send();
-          console.log("404: no Food Found");
         }
       })
       .catch(e => res.status(400).send());
   },
   // Add Project:
   add(req, res){
-    console.log("Add Items: ", req.body.items);
     var project = new Project({
       name: req.body.name,
       items: req.body.items,
-      materials: req.body.materials,
+      // materials: req.body.materials,
       status: req.body.project_status,
       project_startDate: req.body.project_startDate,
-      project_completed: req.body.completed,
       project_completedDate: req.body.completedOn,
       _creator: req.user._id
     });
@@ -58,9 +55,11 @@ module.exports = {
     );
   },
   // Edit Project:
-  edit(req,res){
-    let id = req.params.id;
-    if(!ObjectID.isValid(id)){
+  edit(req, res){
+    let id = req.params._id;
+    // console.log("Porject Id: ", id);
+    console.log("Projecet Payload: ", req.params)
+    if (!ObjectId.isValid(id)) {
       return res.status(404).send();
     }
     Project.findOneAndUpdate(
@@ -68,11 +67,10 @@ module.exports = {
         _id: id,
         _creator: req.user._id,
         name: req.body.name,
-        tools: req.body.tools,
-        materials: req.body.materials,
-        status: req.body.status,
-        completed: req.body.completed,
-        completedOn: req.body.completedOn
+        items: req.body.items,
+        // materials: req.body.materials,
+        status: req.body.project_status,
+        project_completedDate: req.body.project_completedDate
       }
     )
     .then((project)=>{

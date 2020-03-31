@@ -1,11 +1,10 @@
-var Express = require('express');
-var bodyParser = require('body-parser');
+const Express = require('express');
+const bodyParser = require('body-parser');
 
 const morgan = require('morgan');
 const cors = require('cors');
 
 const { mongoose } = require('./Database/mongoose');
-
 
 const router = require('./router');
 
@@ -17,13 +16,15 @@ var app = Express();
 // App SetUp Middleware:
 app.use(morgan('combined'));
 
+
+
 // Set the JWT to authToken with this the front end can access the token in the request.
 const corsOptions = {
   exposedHeaders: ['authToken'],
 };
 app.use(cors(corsOptions));
+app.use(bodyParser.json());
 
-app.use(bodyParser.json({ type: '*/*' }));
 
 // ROUTER: Routes of actions:
 router(app);
@@ -46,3 +47,5 @@ app.use((req, res, next)=>{
 app.listen(port, () => {
   console.log(`Server is up on port ${port}`);
 });
+
+
