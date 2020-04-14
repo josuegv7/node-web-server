@@ -30,4 +30,6 @@ module.exports = function (app) {
   app.post('/files/upload', singleUpload, FileController.uploadFile);
   app.get('/files/getfile', FileController.getFiles);
   app.get('/files/open/:filename', FileController.getSingleFile);
+  app.delete('/files/delete/:filename', FileController.deleteSingleFIle);
+
 };

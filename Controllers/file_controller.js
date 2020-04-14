@@ -1,3 +1,7 @@
+const { File } = require("../Models/File");
+const { ObjectId } = require("mongodb");
+
+
 const path = require('path');
 // Connection to DB
 const mongoose = require('mongoose');
@@ -19,51 +23,39 @@ conn.once('open', function () {
     gfs.collection('files');
 });
 
-let storage = new GridFsStorage({
-    url: mongoURI,
-    file: (req, file) => {
-        console.log("Storage Req: ", req);
-        return new Promise((resolve, reject) => {
-            const filename = path.extname(file.originalname);
-            const fileInfo = {
-                filename: filename,
-                bucketName: 'files'
-            };
-            resolve(fileInfo);
-            
-            // crypto.randomBytes(4, (err, buf) => {
-            //     if (err) {
-            //         return reject(err);
-            //     }
-            //     // const filename = buf.toString('hex') + path.extname(file.originalname);
-            //     // const filename = path.extname(file.originalname) + buf.toString('hex');
-            //     const filename = path.extname(file.originalname);
-            //     const fileInfo = {
-            //         filename: filename,
-            //         bucketName: 'files'
-            //     };
-            //     resolve(fileInfo);
-            // });
-        });
-    }
-});
-const upload = multer({ storage });
-const singleUpload = upload.single('file');
-module.exports = { singleUpload };
-
 // ***********************************************************
 module.exports = {
     uploadFile(req, res) {
-        res.json({file: req.file});
+        // res.json({file: req.file});
+        var file = new File({
+            Original_filename: req.file.originalname,
+            filename: req.file.filename,
+            upload_Date: req.file.uploadDate,
+            file_type: req.file.mimetype,
+            _creator: req.user._id
+        });
+        file.save().then(
+            (file) => {
+                res.send(req.file);
+            },
+            (e) => {
+                res.status(400).send(e);
+            }
+        );
     },
     getFiles(req,res){
         gfs.files.find().toArray((err, files)=>{
             // Check if there are files:
-            if(!files || files.length === 0){
+            if(!files){
                 return res.status(404).json({
                     err: "No Files Found"
                 });
-            }else{
+            }else if(files.length === 0){
+                return res.status(204).json({
+                    files: "Processed request but not returning any content."
+                });
+            }
+            else{
                 return res.json(files);
             }
         }); 
@@ -81,13 +73,20 @@ module.exports = {
                 // return res.json(file);
             }
         });
+    },
+    deleteSingleFIle(req,res){
+        let fileID = req.params.filename;
+        gfs.remove({_id: fileID, root:'files'}, (err, gridStore) =>{
+            if(err){
+                return res.status(404).json({err: err});
+            }
+            if(!err){
+                return res.json({status: "File delted"});
+            }
+        });
+
     }
-
-
-
-
 };
-
 
 
 

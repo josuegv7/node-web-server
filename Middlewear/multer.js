@@ -24,11 +24,12 @@ let storage = new GridFsStorage({
     url: mongoURI,
     file: (req, file) => {
         return new Promise((resolve, reject) => {
-            crypto.randomBytes(16, (err, buf) => {
+            crypto.randomBytes(8, (err, buf) => {
                 if (err) {
                     return reject(err);
                 }
-                const filename = buf.toString('hex') + path.extname(file.originalname);
+                    // const filename = buf.toString('hex') + path.extname(file.originalname);
+                const filename = file.originalname + " " +buf.toString('hex') ;
                 const fileInfo = {
                     filename: filename,
                     bucketName: 'files'
